@@ -166,5 +166,5 @@ def main(test = False, chkpt = None):
     env.close()
 
 if __name__ == '__main__':
-    main(True, "/home/karol/Dokumenty/Magisterka badania/cartpole_test/trained_models/trained.pth")
-    #main()
+    #main(True, "/home/karol/Dokumenty/Magisterka badania/cartpole_test/trained_models/trained.pth")
+    main()
