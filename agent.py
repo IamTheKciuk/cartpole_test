@@ -168,3 +168,4 @@ def main(test = False, chkpt = None):
 if __name__ == '__main__':
     #main(True, "/home/karol/Dokumenty/Magisterka badania/cartpole_test/trained_models/trained.pth")
     main()
+    #test commit mode
