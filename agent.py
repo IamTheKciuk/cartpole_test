@@ -69,7 +69,7 @@ class ReplayBuffer:
 def update_tgt_model(m, tgt):
     tgt.load_state_dict(m.state_dict())
 
-def train_step(model, state_transitions, tgt, num_actions, device):
+def train_step(model, state_transitions, tgt, num_actions, device, gamma=0.99):
     cur_states = torch.stack(([torch.Tensor(s.state) for s in state_transitions])).to(device)
     rewards = torch.stack(([torch.Tensor([s.reward]) for s in state_transitions])).to(device)
     mask = torch.stack(([torch.Tensor([0]) if s.done else torch.Tensor([1]) for s in state_transitions])).to(device)
@@ -83,7 +83,7 @@ def train_step(model, state_transitions, tgt, num_actions, device):
     qvals = model(cur_states) # oblicza q val
     one_hot_actions = F.one_hot(torch.LongTensor(actions), num_actions).to(device)
 
-    loss = ((rewards + mask[:, 0]*qvals_next - torch.sum(qvals*one_hot_actions, -1))**2).mean()
+    loss = ((rewards + mask[:, 0] * qvals_next * gamma - torch.sum(qvals*one_hot_actions, -1))**2).mean()
     loss.backward()
     model.opt.step()
     return loss
