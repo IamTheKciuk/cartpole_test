@@ -33,7 +33,7 @@ class DQNAgent:
 
 #model sieci
 class Model(nn.Module):
-    def __init__(self, obs_shape, num_actions):
+    def __init__(self, obs_shape, num_actions, lr=0.0001):
         super(Model, self).__init__()
         assert len(obs_shape) == 1, "This network works only for flat observations"
         self.obs_shape = obs_shape
@@ -43,7 +43,7 @@ class Model(nn.Module):
             torch.nn.ReLU(),
             torch.nn.Linear(256, num_actions),
         )
-        self.opt = optim.Adam(self.net.parameters(), lr = 0.0001)
+        self.opt = optim.Adam(self.net.parameters(), lr = lr)
 
     def forward(self, x):
         return self.net(x)
@@ -95,6 +95,7 @@ def main(test = False, chkpt = None, device = 'cpu'):
     memory_size = 500000 # pamięć gry
     min_rb_size = 20000
     sample_size = 750 #batch size <----
+    lr = 0.001
 
     eps_min = 0.01
     eps_decay = 0.999999
@@ -105,7 +106,7 @@ def main(test = False, chkpt = None, device = 'cpu'):
     env = gym.make("CartPole-v1")
     last_observation = env.reset()
 
-    m = Model(env.observation_space.shape, env.action_space.n).to(device) #stworzenie modelu sieci trenujacej -> odpalenie go na gpu
+    m = Model(env.observation_space.shape, env.action_space.n, lr=lr).to(device) #stworzenie modelu sieci trenujacej -> odpalenie go na gpu
     if chkpt is not None:
         m.load_state_dict(torch.load(chkpt))
     tgt = Model(env.observation_space.shape, env.action_space.n).to(device) # stworzenie modelu sieci docelowej
