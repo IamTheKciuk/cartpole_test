@@ -11,6 +11,7 @@ import wandb
 from tqdm import tqdm
 from collections import deque
 import numpy as np
+import argh
 
 @dataclass
 class Sarsd:
@@ -88,9 +89,9 @@ def train_step(model, state_transitions, tgt, num_actions, device, gamma=0.99):
     model.opt.step()
     return loss
 
-def main(test = False, chkpt = None, device = 'cpu'):
+def main(name, test = False, chkpt = None, device = 'cpu'):
     if not test:
-        wandb.init(project='dqn-tutorial', name='dqn-cartpole')
+        wandb.init(project='dqn-tutorial', name=name)
 
     memory_size = 500000 # pamięć gry
     min_rb_size = 20000
@@ -173,4 +174,4 @@ def main(test = False, chkpt = None, device = 'cpu'):
 
 if __name__ == '__main__':
     #main(True, "/home/karol/Dokumenty/Magisterka badania/cartpole_test/trained_models/trained.pth")
-    main()
+    main("test_case")
